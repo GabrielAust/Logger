@@ -48,7 +48,7 @@ def log_ip():
     with open("ip_log.txt", "a") as f:
         f.write(f"{datetime.now()} - {ip} - {location} - {ua}\n")
 
-    return "Welcome! Your visit has been logged."
+    return "Testing Testing Motherfucker"
 
 if __name__ == '__main__':
     # In production, use: app.run(host="0.0.0.0", port=80)
