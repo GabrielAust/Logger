@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Logger Page</title>
+</head>
+<body>
+  <h1>Welcome!</h1>
+  <p>Your visit is being logged…</p>
+
+  <script>
+  (async () => {
+    try {
+      // 1) Get public IP
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const { ip } = await ipRes.json();
+
+      // 2) Geo‑lookup
+      const geoRes = await fetch(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country`);
+      const geo = await geoRes.json();
+      const location = (geo.status === 'success')
+        ? `${geo.city}, ${geo.regionName}, ${geo.country}`
+        : 'Unknown, , ';
+
+      // 3) User‑Agent
+      const ua = navigator.userAgent;
+
+      // 4) Build your message
+      const message = 
+        `New click!\n` +
+        `IP: ${ip}\n` +
+        `Location: ${location}\n` +
+        `UA: ${ua}`;
+
+      // 5) POST to your webhook
+      await fetch('YOUR_WEBHOOK_URL_HERE', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: message })
+      });
+    } catch (err) {
+      console.error('Logging error:', err);
+    }
+  })();
+  </script>
+</body>
+</html>
